@@ -8,18 +8,18 @@ using System.Text;
 
 namespace NewsWcfService
 {
-    // ПРИМЕЧАНИЕ. Команду "Переименовать" в меню "Рефакторинг" можно использовать для одновременного изменения имени интерфейса "IService1" в коде и файле конфигурации.
+    // ПРИМЕЧАНИЕ. Команду "Переименовать" в меню "Рефакторинг" можно использовать для одновременного изменения имени интерфейса "INewsHandler" в коде и файле конфигурации.
     [ServiceContract]
-    public interface IService1
+    public interface INewsHandler
     {
-
         [OperationContract]
-        string GetData(int value);
-
+        List<New> GetNewsFromTable();
         [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
-
-        // TODO: Добавьте здесь операции служб
+        New GetNewByNumber(int number);
+        [OperationContract]
+        void SaveNewByNumber(int number);
+        [OperationContract]
+        int NewsCount();
     }
 
 

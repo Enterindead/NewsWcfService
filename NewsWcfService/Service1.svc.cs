@@ -5,28 +5,64 @@ using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
+using System.Data.Entity;
 
 namespace NewsWcfService
 {
-    // ПРИМЕЧАНИЕ. Команду "Переименовать" в меню "Рефакторинг" можно использовать для одновременного изменения имени класса "Service1" в коде, SVC-файле и файле конфигурации.
-    public class Service1 : IService1
+    // ПРИМЕЧАНИЕ. Команду "Переименовать" в меню "Рефакторинг" можно использовать для одновременного изменения имени класса "NewsService" в коде, SVC-файле и файле конфигурации.
+    public class NewsService : INewsHandler
     {
-        public string GetData(int value)
+        NewsCollection NewsFromXML = NewsSerializer.Deserialize();
+
+        public int NewsCount()
         {
-            return string.Format("You entered: {0}", value);
+            return NewsFromXML.New.Length;
         }
 
-        public CompositeType GetDataUsingDataContract(CompositeType composite)
+        public List<New> GetNewsFromTable()
         {
-            if (composite == null)
+            using (var db = new NewsContext())
             {
-                throw new ArgumentNullException("composite");
+                //Database.SetInitializer<NewsContext>(null);
+                var query = from b in db.News
+                            select b;
+                List<New> ReceivedNews = new List<New> { };
+                foreach (var item in query)
+                {
+                    ReceivedNews.Add(item);
+                }
+                return ReceivedNews;
             }
-            if (composite.BoolValue)
-            {
-                composite.StringValue += "Suffix";
-            }
-            return composite;
         }
+
+        public New GetNewByNumber(int number)
+        {
+
+            if (NewsFromXML.New.Length > number)
+            {
+                return NewsFromXML.New[number];
+            }
+
+            return null;
+        }
+
+        public void SaveNewByNumber(int number)
+        {
+            using (var db = new NewsContext())
+            {
+                New newToSave = null;
+                if (NewsFromXML.New.Length > number)
+                {
+                    newToSave = NewsFromXML.New[number];
+                    db.News.Add(newToSave);
+                    db.SaveChanges();
+                }
+            }
+        }
+    }
+
+    public class NewsContext : DbContext
+    {
+        public DbSet<New> News { get; set; }
     }
 }
