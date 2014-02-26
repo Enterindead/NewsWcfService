@@ -64,7 +64,7 @@ namespace NewsWcfService
 
     public class NewsContext : DbContext
     {
-        public static string ConnectionStringName = "DefaultConnection";
+        public static string ConnectionStringName = "context";
 
         public NewsContext()
             : base(ConnectionStringName)
