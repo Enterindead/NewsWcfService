@@ -87,6 +87,7 @@ namespace NewsWcfService
        public Configuration()
        {
           AutomaticMigrationsEnabled = true;
+          AutomaticMigrationDataLossAllowed = true;
        }
     }
 }
