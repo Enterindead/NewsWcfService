@@ -6,6 +6,7 @@ using System.ServiceModel;
 using System.ServiceModel.Web;
 using System.Text;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 
 namespace NewsWcfService
 {
@@ -63,6 +64,29 @@ namespace NewsWcfService
 
     public class NewsContext : DbContext
     {
+        public static string ConnectionStringName = "DefaultConnection";
+
+        public NewsContext()
+            : base(ConnectionStringName)
+        {
+        }
+        
         public DbSet<New> News { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<NewsContext, Configuration>());
+            base.OnModelCreating(modelBuilder);
+        }
+
+
+    }
+
+    internal sealed class Configuration : DbMigrationsConfiguration<NewsContext>
+    {
+       public Configuration()
+       {
+          AutomaticMigrationsEnabled = true;
+       }
     }
 }
