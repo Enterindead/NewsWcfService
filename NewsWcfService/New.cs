@@ -28,9 +28,14 @@ namespace NewsWcfService
         [DataMember]
         public String PubDate { get; set; }
 
+        Enclosure enclosure = new Enclosure();
+        
         [System.Xml.Serialization.XmlElement("enclosure")]
         [DataMember]
-        public Enclosure Enclosure { get; set; }
+        public Enclosure Enclosure {
+            get { return this.enclosure; }
+            set { this.enclosure = value;}
+        }
 
         [System.Xml.Serialization.XmlElement("category")]
         [DataMember]
